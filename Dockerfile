@@ -5,6 +5,7 @@ RUN pip install uv
 
 WORKDIR /app
 COPY pyproject.toml .
+COPY src/ src/
 RUN uv pip install --system .
 
 # Stage 2: Runtime
@@ -20,7 +21,7 @@ COPY --from=builder /usr/local/bin /usr/local/bin
 WORKDIR /app
 COPY src/ src/
 
-# Cloud Run inyecta el puerto via $PORT
-ENV PORT=8000
+ENV PYTHONPATH=/app/src
+ENV PORT=10000
 
-CMD uvicorn sara.main:app --host 0.0.0.0 --port $PORT
+CMD ["sh", "-c", "uvicorn sara.main:app --host 0.0.0.0 --port ${PORT}"]
