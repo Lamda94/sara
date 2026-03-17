@@ -15,18 +15,9 @@ logger = logging.getLogger(__name__)
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    """Carga modelos ML al arrancar y libera recursos al cerrar."""
+    """Inicia la aplicación. Los modelos ML se cargan bajo demanda."""
     logger.info("Iniciando Sara - Agente de Voz")
-    logger.info("Cargando modelos ML (esto puede tardar la primera vez)...")
-
-    # Pre-cargar modelos para evitar latencia en la primera petición
-    from sara.services.stt_service import stt_service
-    from sara.services.speaker_service import speaker_service
-
-    stt_service._load_model()
-    speaker_service._load_model()
-
-    logger.info("Modelos cargados. Sara está lista.")
+    logger.info("Modelos ML se cargarán bajo demanda en la primera petición.")
     yield
     logger.info("Sara apagándose...")
 

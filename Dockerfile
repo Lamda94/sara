@@ -15,6 +15,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     ffmpeg \
     && rm -rf /var/lib/apt/lists/*
 
+RUN useradd -m -u 1000 user
+
 COPY --from=builder /usr/local/lib/python3.12/site-packages /usr/local/lib/python3.12/site-packages
 COPY --from=builder /usr/local/bin /usr/local/bin
 
@@ -22,6 +24,8 @@ WORKDIR /app
 COPY src/ src/
 
 ENV PYTHONPATH=/app/src
-ENV PORT=10000
+ENV PORT=7860
+
+USER user
 
 CMD ["sh", "-c", "uvicorn sara.main:app --host 0.0.0.0 --port ${PORT}"]
