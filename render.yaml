@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: sara
+    runtime: docker
+    plan: free
+    envVars:
+      - key: DATABASE_URL
+        sync: false
+      - key: WHISPER_MODEL
+        value: small
+      - key: WHISPER_DEVICE
+        value: cpu

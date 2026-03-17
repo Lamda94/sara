@@ -1,0 +1,33 @@
+services:
+  db:
+    image: pgvector/pgvector:pg16
+    environment:
+      POSTGRES_DB: sara
+      POSTGRES_USER: sara
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-sara_dev_password}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U sara"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  app:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      DATABASE_URL: postgresql+asyncpg://sara:${DB_PASSWORD:-sara_dev_password}@db:5432/sara
+      WHISPER_MODEL: small
+      WHISPER_DEVICE: cpu
+    volumes:
+      - ./models:/app/models
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  pgdata:
