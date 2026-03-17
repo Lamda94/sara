@@ -5,7 +5,7 @@ RUN pip install uv
 
 WORKDIR /app
 COPY pyproject.toml .
-RUN uv pip install --system --no-dev .
+RUN uv pip install --system .
 
 # Stage 2: Runtime
 FROM python:3.12-slim
